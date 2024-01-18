@@ -26,18 +26,17 @@ public class ExpenseService {
     private UserExpenseRepository userExpenseRepository;
     private SettleUpStrategy settleUpStrategy;
     private GroupRepository groupRepository;
-    private ExpenseRepository expenseRepository;
+//    private ExpenseRepository expenseRepository;
 
     @Autowired
     public ExpenseService(UserRepository userRepository,
                           UserExpenseRepository userExpenseRepository,
                           @Qualifier("twoSetsSettleUpStrategy") SettleUpStrategy settleUpStrategy,
-                          GroupRepository groupRepository,
-                          ExpenseRepository expenseRepository) {
+                          GroupRepository groupRepository) {
         this.userRepository = userRepository;
         this.userExpenseRepository = userExpenseRepository;
         this.settleUpStrategy = settleUpStrategy;
-        this.expenseRepository = expenseRepository;
+//        this.expenseRepository = expenseRepository;
         this.groupRepository = groupRepository;
     }
 
@@ -69,22 +68,22 @@ public class ExpenseService {
         return filteredTransactions;
     }
 
-    public List<Transaction> settleUpGroup(Long groupId) {
-        Optional<Group> groupOptional = groupRepository.findById(groupId);
-
-        if (groupOptional.isEmpty()) {
-            // throw nexception
-            return null;
-        }
-
-        List<Expense> expenses = expenseRepository.findAllByGroups(groupOptional.get());
-
-        List<Transaction> transactions = settleUpStrategy.settle(
-                expenses
-        );
-
-        return transactions;
-    }
+//    public List<Transaction> settleUpGroup(Long groupId) {
+//        Optional<Group> groupOptional = groupRepository.findById(groupId);
+//
+//        if (groupOptional.isEmpty()) {
+//            // throw nexception
+//            return null;
+//        }
+//
+//        List<Expense> expenses = expenseRepository.findAllByGroups(groupOptional.get());
+//
+//        List<Transaction> transactions = settleUpStrategy.settle(
+//                expenses
+//        );
+//
+//        return transactions;
+//    }
 }
 
 // BMS, Splitwise, TTT, PL,
