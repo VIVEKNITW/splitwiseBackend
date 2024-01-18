@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 @SpringBootApplication
 public class SplitwiseApplication implements CommandLineRunner {
-    private Scanner scanner;
+    private Scanner scanne;
     private CommandRegistry commandRegistry;
 
     @Autowired
