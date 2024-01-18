@@ -24,9 +24,5 @@ public class Expense extends BaseModel {
 
     @OneToMany(mappedBy = "expense")
     List<expenseUser> expenseUsers;
-//    @ManyToMany
-//    private List<User> paidBy;
-//
-//    @ManyToMany
-//    private List<User> dividedAmong;
+
 }
