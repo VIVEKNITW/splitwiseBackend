@@ -9,5 +9,5 @@ import lombok.Setter;
 public class Transaction {
     private User from;
     private User to;
-    private Integer amount;
+    private Double amount;
 }

@@ -1,15 +1,13 @@
 package com.project.splitwise.services;
 
-import com.project.splitwise.repositories.ExpenseRepository;
 import com.project.splitwise.repositories.GroupRepository;
 import com.project.splitwise.repositories.UserExpenseRepository;
 import com.project.splitwise.repositories.UserRepository;
 import com.project.splitwise.strategies.settleupstrategy.SettleUpStrategy;
 import com.project.splitwise.strategies.settleupstrategy.Transaction;
 import com.project.splitwise.models.Expense;
-import com.project.splitwise.models.Group;
 import com.project.splitwise.models.User;
-import com.project.splitwise.models.expenseUser;
+import com.project.splitwise.models.ExpenseUser;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -48,10 +46,10 @@ public class ExpenseService {
             return null;
         }
 
-        List<expenseUser> userExpenses = userExpenseRepository.findAllByUser(userOptional.get());
+        List<ExpenseUser> userExpenses = userExpenseRepository.findAllByUser(userOptional.get());
 
         List<Expense> expensesInvolvingUser = new ArrayList<>();
-        for (expenseUser userExpense: userExpenses) {
+        for (ExpenseUser userExpense: userExpenses) {
             expensesInvolvingUser.add(userExpense.getExpense());
         }
 

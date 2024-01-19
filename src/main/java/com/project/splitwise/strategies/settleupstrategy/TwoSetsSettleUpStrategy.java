@@ -3,7 +3,7 @@ package com.project.splitwise.strategies.settleupstrategy;
 import com.project.splitwise.repositories.UserExpenseRepository;
 import com.project.splitwise.models.Expense;
 import com.project.splitwise.models.User;
-import com.project.splitwise.models.expenseUser;
+import com.project.splitwise.models.ExpenseUser;
 import com.project.splitwise.models.UserExpenseType;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +24,14 @@ public class TwoSetsSettleUpStrategy implements SettleUpStrategy {
     public List<Transaction> settle(
             List<Expense> expenses) {
         // for all expenses thqat I have to settle, who paid how much and who had to pay how much
-        List<expenseUser> allUserExpenseForTheseExpenses = userExpenseRepository.findAllByExpenseIn(expenses);
+        List<ExpenseUser> allUserExpenseForTheseExpenses = userExpenseRepository.findAllByExpenseIn(expenses);
 
-        HashMap<User, Integer> moneyPaidExtra = new HashMap<>();
+        HashMap<User, Double> moneyPaidExtra = new HashMap<>();
 
         // I went through all of the expenses and found out who has paid how much extra or less
-        for (expenseUser userExpense: allUserExpenseForTheseExpenses) {
+        for (ExpenseUser userExpense: allUserExpenseForTheseExpenses) {
             User user = userExpense.getUser();
-            int currentExtraPaid = 0;
+            double currentExtraPaid = 0;
 
             if (moneyPaidExtra.containsKey(user)) {
                 currentExtraPaid = moneyPaidExtra.get(user);
@@ -44,11 +44,11 @@ public class TwoSetsSettleUpStrategy implements SettleUpStrategy {
             }
         }
 
-        TreeSet<Pair<User, Integer>> extraPaid = new TreeSet<>();
-        TreeSet<Pair<User, Integer>> lessPaid = new TreeSet<>();
+        TreeSet<Pair<User, Double>> extraPaid = new TreeSet<>();
+        TreeSet<Pair<User, Double>> lessPaid = new TreeSet<>();
 
         // {Key, Value}
-        for (Map.Entry<User, Integer> userAmount: moneyPaidExtra.entrySet()) {
+        for (Map.Entry<User, Double> userAmount: moneyPaidExtra.entrySet()) {
             if (userAmount.getValue() < 0) {
                 lessPaid.add(new Pair<>(userAmount.getKey(), userAmount.getValue()));
             } else {
@@ -59,8 +59,8 @@ public class TwoSetsSettleUpStrategy implements SettleUpStrategy {
         List<Transaction> transactions = new ArrayList<>();
 
         while (!lessPaid.isEmpty()) {
-            Pair<User, Integer> lessPaidPair = lessPaid.pollFirst(); // get and remove the first value
-            Pair<User, Integer> extraPaidPair = extraPaid.pollFirst();
+            Pair<User, Double> lessPaidPair = lessPaid.pollFirst(); // get and remove the first value
+            Pair<User, Double> extraPaidPair = extraPaid.pollFirst();
 
             Transaction t = new Transaction();
             t.setFrom(lessPaidPair.a);
