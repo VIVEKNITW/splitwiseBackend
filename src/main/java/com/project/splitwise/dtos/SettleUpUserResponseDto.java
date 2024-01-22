@@ -11,5 +11,5 @@ import java.util.List;
 public class SettleUpUserResponseDto {
     String message;
     String status;
-    List<Transaction> transactions;
+    List<String> transactions;
 }

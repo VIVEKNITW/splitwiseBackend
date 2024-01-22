@@ -7,7 +7,6 @@ import com.project.splitwise.exceptions.PaidByListSizeException;
 import com.project.splitwise.exceptions.PaidSumNotEqualToTotalAmount;
 import com.project.splitwise.exceptions.UserDoesntExistException;
 import com.project.splitwise.services.AddExpenseService;
-import com.project.splitwise.services.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
