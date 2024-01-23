@@ -58,3 +58,8 @@ Build and run the application using Maven:
 ```bash
 mvn clean install
 java -jar target/splitwise.jar
+```
+
+## Documentation:
+Used swagger to document the endpoints, which can help other developers to use the application in their code.
+Swagger end point: `http://localhost:8080/swagger-ui/index.html`
