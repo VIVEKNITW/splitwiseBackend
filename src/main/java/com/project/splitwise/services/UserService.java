@@ -48,6 +48,3 @@ public class UserService {
     }
 }
 
-
-// ExpenseController
-// splitwise.com/api/settleUp -> SettleUpController

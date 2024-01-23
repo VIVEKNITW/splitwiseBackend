@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
+    Expense save(Expense expesne);
 
-//    List<Expense> findAllByGroups(Group group);
+    List<Expense> findAllByGroup(Group group);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Entity
 public class Expense extends BaseModel {
-    private int amount;
+    private double amount;
     private String description;
 
     @Enumerated(EnumType.ORDINAL)
@@ -22,11 +22,7 @@ public class Expense extends BaseModel {
     @ManyToOne
     private Group group;
 
-    @OneToMany(mappedBy = "expense")
-    List<expenseUser> expenseUsers;
-//    @ManyToMany
-//    private List<User> paidBy;
-//
-//    @ManyToMany
-//    private List<User> dividedAmong;
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
+    List<ExpenseUser> expenseUsers;
+
 }
