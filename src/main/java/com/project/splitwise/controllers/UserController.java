@@ -1,16 +1,13 @@
 package com.project.splitwise.controllers;
 
-import com.project.splitwise.dtos.RegisterUserRequestDto;
-import com.project.splitwise.dtos.RegisterUserResponseDto;
+import com.project.splitwise.dtos.*;
 import com.project.splitwise.exceptions.UserAlreadyExistsException;
+import com.project.splitwise.exceptions.UserDoesntExistException;
 import com.project.splitwise.models.User;
 import com.project.splitwise.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -45,6 +42,62 @@ public class UserController {
 
         return response;
     }
+
+    @PutMapping("/updateUser/{userId}")
+    public RegisterUserResponseDto updateUser(@RequestBody RegisterUserRequestDto request, @PathVariable long userId) {
+        User user;
+        RegisterUserResponseDto response = new RegisterUserResponseDto();
+
+        try {
+            user = userService.updateUser(
+                    userId,
+                    request.getUserName(),
+                    request.getPhoneNumber(),
+                    request.getPassword()
+            );
+
+
+            response.setUserId(user.getId());
+            response.setStatus("SUCCESS");
+            response.setMessage("User has been updated successfully");
+        } catch (UserDoesntExistException e) {
+            response.setStatus("FAILURE");
+            response.setMessage(e.getMessage());
+        }
+
+        return response;
+    }
+
+    @GetMapping("/getUser/{id}")
+    public GetUserDetailResponseDto getUser(@PathVariable long id){
+        GetUserDetailResponseDto response = new GetUserDetailResponseDto();
+        try{
+            User user = userService.findUser(id);
+            response.setMessage("User with id= "+id+" found");
+            response.setUserName(user.getName());
+            response.setPhoneNumber(user.getPhone());
+            response.setPassword("********");
+        }catch (UserDoesntExistException e){
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+
+    @DeleteMapping("deleteUser/{id}")
+    public DeleteUserResponseDto deleteUser(@PathVariable long id){
+        DeleteUserResponseDto responseDto = new DeleteUserResponseDto();
+        try{
+            userService.deleteUser(id);
+            responseDto.setStatus("SUCCESS");
+            responseDto.setMessage("user with id= "+id+" has been deleted successfully");
+        }catch (UserDoesntExistException e){
+            responseDto.setMessage("No user with id= "+id+"exists in database");
+        }
+        return responseDto;
+    }
+
+
 
     @PostMapping("/test")
     public RegisterUserResponseDto test(@RequestBody RegisterUserRequestDto request){

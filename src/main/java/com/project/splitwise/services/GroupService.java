@@ -2,6 +2,7 @@ package com.project.splitwise.services;
 
 import com.project.splitwise.dtos.RegisterGroupRequestDto;
 import com.project.splitwise.dtos.RegisterGroupResponseDto;
+import com.project.splitwise.exceptions.GroupDoesntExistException;
 import com.project.splitwise.exceptions.UserDoesntExistException;
 import com.project.splitwise.models.Group;
 import com.project.splitwise.models.User;
@@ -75,6 +76,33 @@ public class GroupService {
 
         System.out.println("returning the response");
         return response;
+    }
+
+    public void addUsersToGroup(long groupId, List<Long> userIds) throws GroupDoesntExistException {
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        if(optionalGroup.isEmpty()){
+            throw new GroupDoesntExistException("Group with id= "+groupId+" doesn't exist in database");
+        }
+        Group group = optionalGroup.get();
+        List<User> usersPresent = group.getMembers();
+        Set<User> usersPresentSet = new HashSet<>();
+        usersPresentSet.addAll(usersPresent);
+
+        List<Long> notFoundIds = new ArrayList<>();
+        List<User> usersToBeAdded = new ArrayList<>();
+        for(long id:userIds){
+            Optional<User> optionalUser = userRepository.findById(id);
+            if(optionalUser.isEmpty()){
+                notFoundIds.add(id);
+            }
+            if(!usersPresentSet.contains(optionalUser.get())){
+                usersToBeAdded.add(optionalUser.get());
+            }
+        }
+
+        group.addUsers(usersToBeAdded);
+        groupRepository.save(group);
+
     }
 }
 

@@ -25,5 +25,8 @@ public class Group extends BaseModel {
     private User createdBy;
     private String name;
 
+    public void addUsers(List<User> users){
+        members.addAll(users);
+    }
 
 }

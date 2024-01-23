@@ -1,15 +1,15 @@
 package com.project.splitwise.controllers;
 
+import com.project.splitwise.dtos.AddUsersToGroupRequestDto;
+import com.project.splitwise.dtos.AddUsersToGroupResponseDto;
 import com.project.splitwise.dtos.RegisterGroupRequestDto;
 import com.project.splitwise.dtos.RegisterGroupResponseDto;
+import com.project.splitwise.exceptions.GroupDoesntExistException;
 import com.project.splitwise.exceptions.UserDoesntExistException;
 import com.project.splitwise.models.Group;
 import com.project.splitwise.services.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -35,5 +35,19 @@ public class GroupController {
         }
         return response;
 
+    }
+
+
+    @PostMapping("/addUsersToGroup/{groupId}")
+    public AddUsersToGroupResponseDto addUsersToGroup(@RequestBody AddUsersToGroupRequestDto request, @PathVariable long groupId){
+        AddUsersToGroupResponseDto responseDto = new AddUsersToGroupResponseDto();
+        try{
+            groupService.addUsersToGroup(groupId,  request.getIds());
+            responseDto.setMessage("Added uses");
+            responseDto.setStatus("SUCCESS");
+        }catch (GroupDoesntExistException e){
+            responseDto.setStatus("FAILURE");
+        }
+        return responseDto;
     }
 }
