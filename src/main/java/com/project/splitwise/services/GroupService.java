@@ -19,11 +19,14 @@ import java.util.*;
 public class GroupService {
     GroupRepository groupRepository;
     UserRepository userRepository;
+    ExpenseServiceUserGroup expenseServiceUserGroup;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository){
+    public GroupService(GroupRepository groupRepository, UserRepository userRepository,
+                        ExpenseServiceUserGroup expenseServiceUserGroup){
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+        this.expenseServiceUserGroup = expenseServiceUserGroup;
     }
 
     public RegisterGroupResponseDto registerGroup(String name, Long createdById, List<Long> memberIds, String desc) throws UserDoesntExistException {
@@ -102,6 +105,30 @@ public class GroupService {
 
         group.addUsers(usersToBeAdded);
         groupRepository.save(group);
+
+    }
+
+
+    public void removeUserFromGroup(long groupId, long userId) throws GroupDoesntExistException, UserDoesntExistException {
+        System.out.println("in removeUserFromGroup service");
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        if(optionalGroup.isEmpty()){
+            throw new GroupDoesntExistException("Group with id= "+groupId+" doesn't exist in database");
+        }
+        Group group = optionalGroup.get();
+        System.out.println("group name= "+group.getName());
+        List<User> usersPresent = group.getMembers();
+        Set<Long> usersPresentSet = new HashSet<>();
+
+        for(User user:usersPresent){
+            usersPresentSet.add(user.getId());
+        }
+
+        if(!usersPresentSet.contains(userId)){
+            throw new UserDoesntExistException("user with id= "+userId+" doesn't belong to the group you have entered");
+        }
+
+        expenseServiceUserGroup.settleUpUserInGroup(groupId, userId);
 
     }
 }

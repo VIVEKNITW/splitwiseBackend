@@ -99,13 +99,5 @@ public class UserController {
 
 
 
-    @PostMapping("/test")
-    public RegisterUserResponseDto test(@RequestBody RegisterUserRequestDto request){
-        System.out.println("You're into test method");
-        RegisterUserResponseDto response = new RegisterUserResponseDto();
-        response.setMessage("here's the dummy message");
-        response.setUserId(1234L);
-        response.setStatus("OK");
-        return response;
-    }
+
 }
