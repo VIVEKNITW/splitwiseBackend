@@ -6,6 +6,8 @@ import com.project.splitwise.exceptions.UserDoesntExistException;
 import com.project.splitwise.models.User;
 import com.project.splitwise.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,7 +71,7 @@ public class UserController {
     }
 
     @GetMapping("/getUser/{id}")
-    public GetUserDetailResponseDto getUser(@PathVariable long id){
+    public ResponseEntity<GetUserDetailResponseDto> getUser(@PathVariable long id){
         GetUserDetailResponseDto response = new GetUserDetailResponseDto();
         try{
             User user = userService.findUser(id);
@@ -77,10 +79,12 @@ public class UserController {
             response.setUserName(user.getName());
             response.setPhoneNumber(user.getPhone());
             response.setPassword("********");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (UserDoesntExistException e){
             response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
-        return response;
+
     }
 
 
